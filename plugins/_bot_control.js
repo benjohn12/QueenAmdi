@@ -3,7 +3,7 @@
 * @author BlackAmda <https://github.com/BlackAmda>
 * @description A WhatsApp based 3ʳᵈ party application that provide many services with a real-time automated conversational experience
 * @link <https://github.com/BlackAmda/QueenAmdi>
-* @version 4.0.0
+* @version 4.0.1
 * @file  _bot_control.js - QueenAmdi bot control commands
 
 © 2022 Black Amda, ANTECH. All rights reserved.
@@ -28,6 +28,13 @@ AMDI({ cmd: "restart", desc: "Restart the bot", type: "profile", react: "🔃" }
 
     await reply('*Restarting...*');
     await restart();
+}));
+
+AMDI({ cmd: "stop", desc: "Stop the bot", type: "profile", react: "📴" }, (async (amdiWA) => {
+    let { reply, restart } = amdiWA.msgLayout
+
+    await reply('*Bot is shutting down...*\n\n_(You have to manually turn on the bot!)_');
+    process.exit(1);
 }));
 
 
@@ -173,6 +180,8 @@ AMDI({ cmd: "reset", desc: Lang.resetDESC, type: "profile", react: "🚮" }, (as
 
 AMDI({ cmd: "rate", desc: Lang.rateDESC, type: "primary", react: "✨" }, (async (amdiWA) => {
     let { input, prefix, reply, sender, sendButtonMsg, sendListMsg } = amdiWA.msgLayout
+
+    if (process.env.DATABASE_URL === 'local' || process.env.DATABASE_URL === 'vps') return reply('Rating feature is not available for local databases! :(');
 
     if (!input) {
         const botname = await getMiscData('BOTNAME');
